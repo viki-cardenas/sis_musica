@@ -40,7 +40,7 @@ npm run dev
 ## Scripts Disponibles
 
 - `npm run dev` - Inicia el servidor en modo desarrollo
-- `npm start` - Inicia el servidor en modo producción
+- `npm start` - Inicia el servidor en modo producción 
 - `npx prisma studio` - Abre interfaz visual de la base de datos
 - `npx prisma migrate dev` - Crea y ejecuta migraciones
 
