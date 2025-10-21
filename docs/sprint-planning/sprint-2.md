@@ -4,7 +4,8 @@
 **Duración del Sprint:** [2 semanas]
 
 ## Objetivo del Sprint
-
+Implementar la funcionalidad que permita a un usuario crear, nombrar y guardar playlists 
+en Music Spotify
 
 ## Product Backlog Seleccionado
 
