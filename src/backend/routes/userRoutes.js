@@ -15,7 +15,7 @@ const router = express.Router();
  *          example: 1
  *        email:
  *          type: string
- *          example: @gmail.victoriacom
+ *          example: victoria@gmail.com
  *        name:
  *          type: string
  *          example: victoria
@@ -50,10 +50,10 @@ router.get("/", userController.getUsers);
  *            properties:
  *              email:
  *                type: string
- *                example: magenta@gmail.com
+ *                example: victoria@gmail.com
  *              name:
  *                type: string
- *                example: magenta
+ *                example: victoria
  *    responses: 
  *      201:
  *        description: Usuario creado correctamente
