@@ -1,6 +1,5 @@
 import express from "express";
-import { registerUser } from "../controllers/emailController.js";
-
+import { registerUser } from "../controllers/emailControllers.js";
 
 const router = express.Router();
 /**
@@ -28,7 +27,7 @@ const router = express.Router();
  *      500:
  *        description: Error del servidor
  */
-router.post("/register", registerUser);
+router.post("/register",registerUser);
 
 export default router;
 

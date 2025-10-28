@@ -11,7 +11,7 @@ export const userService ={
                 data :{email, name}
             })
         }catch(error){
-            throw new error('Error al crear usuario' + error.message);
+            throw new Error('Error al crear usuario' + error.message);
         }
     },
 
@@ -33,7 +33,7 @@ export const userService ={
                 data:data
             })
         }catch(error){
-            throw new error('Error al actualizar usuario' + error.message); 
+            throw new Error('Error al actualizar usuario' + error.message); 
            
         }
     }    
