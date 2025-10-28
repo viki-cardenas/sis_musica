@@ -1,6 +1,6 @@
 import { verifyToken } from "../utils/auth.js";
 
-export const authenticate = (req,res,next) =>{
+export const authenticate = (req, res, next) =>{
     try{
         //Verificar si tiene token
         const token = req.headers.authorization?.split(" ")[1];
@@ -12,24 +12,22 @@ export const authenticate = (req,res,next) =>{
             });
        }
 
-        //Verificar si el token es válido
+        //Verificar si el token es valido
         const decoded = verifyToken(token);
         if(!decoded){
             return res.status(401).json({
-                succes: false,
-                message: "Token es inválido o expirado"
+                success: false,
+                message: "Token invalido o expirado"
             });
         }
 
         req.user = decoded;
-        next()
-
+        next() 
     }catch(error){
-        req.status(500).json({
+        res.status(500).json({
             success: false,
-            message: "Error de autenticación"
+            message: "Error de autenticacion"
         });
-
-       }
-    };
+    }
+}
 

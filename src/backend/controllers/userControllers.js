@@ -40,25 +40,41 @@ export const userControllers = {
         }
     },
 
-
-    async updateUser(req, res){
-        try{
-            const {id} = req.params;
+    async updateUser(req, res) {
+        try {
+            const { id } = req.params;
             const updateData = req.body;
 
-            const updateUser = await userServices.updateUser(id, updateData);
-
+            const updatedUser = await userService.updateUser(id, updateData);
+            
             res.status(200).json({
-                succes: true,
-                data: updateUser,
-                message: 'Usuario actualizado correctamente'
+                success: true,
+                data: updatedUser,
+                message: 'Usuario actualizado exitosamente'
             });
-        }catch(error){
+        } catch (error) {
             res.status(500).json({
-                succes: false,
+                success: false,
+                message: error.message
+            });
+        }
+    },
+
+    async deleteUser(req, res) {
+        try {
+            const { id } = req.params;
+
+            await userService.deleteUser(id);
+            
+            res.status(200).json({
+                success: true,
+                message: 'Usuario eliminado correctamente'
+            });
+        } catch (error) {
+            res.status(500).json({
+                success: false,
                 message: error.message
             });
         }
     }
-
 }

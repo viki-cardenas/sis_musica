@@ -34,7 +34,7 @@ const router = express.Router();
  *                example: Victoria
  *              password:
  *                type: string
- *                example: v123
+ *                example: v123 
  *    responses:
  *      201:
  *        description: Usuario registrado exitosamente

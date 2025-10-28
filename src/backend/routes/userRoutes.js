@@ -110,57 +110,75 @@ router.post("/", userControllers.createUser);
  *      500:
  *        description: Error del servidor
  */
+router.put("/:id", userControllers.updateUser);
 
 /**
  * @swagger
  * /api/users/{id}:
- *   put:
- *     summary: Actualiza un usuario existente
- *     tags: [Usuarios]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
- *         description: ID del usuario a actualizar
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               nombre:
- *                 type: string
- *               email:
- *                 type: string
- *     responses:
- *       200:
- *         description: Usuario actualizado correctamente
- *       404:
- *         description: Usuario no encontrado
+ *  put:
+ *    summary: Actualizar usuario existente
+ *    tags: [Users]
+ *    parameters:
+ *      - in: path
+ *        name: id
+ *        required: true
+ *        schema:
+ *          type: integer
+ *        description: ID del usuario
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              email:
+ *                type: string
+ *                example: victoria@gmail.com
+ *              name:
+ *                type: string
+ *                example: victoria
+ *    responses:
+ *      200:
+ *        description: Usuario actualizado correctamente
+ *        content:
+ *          application/json:
+ *            $ref: '#/components/schemas/User'
+ *      400:
+ *        description: Datos invalidos
+ *      404:
+ *        description: Usuario no encontrado
+ *      500:
+ *        description: Error del servidor
+ *
  */
+router.put("/:id", userControllers.updateUser);
 
 /**
  * @swagger
  * /api/users/{id}:
- *   delete:
- *     summary: Elimina un usuario por ID
- *     tags: [Usuarios]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
- *         description: ID del usuario a eliminar
- *     responses:
- *       200:
- *         description: Usuario eliminado correctamente
- *       404:
- *         description: Usuario no encontrado
+ *  delete:
+ *    summary: Eliminar usuario
+ *    tags: [Users]
+ *    parameters:
+ *      - in: path
+ *        name: id
+ *        required: true
+ *        schema:
+ *          type: integer
+ *        description: ID del usuario
+ *    responses:
+ *      200:
+ *        description: Usuario eliminado correctamente
+ *      404:
+ *        description: Usuario no encontrado
+ *      500:
+ *        description: Error del servidor
+ *
  */
+router.delete("/:id", userControllers.deleteUser);
+
+
 //Rutas para llamar al usuario
 router.get('/',userControllers.getUsers);
 router.post('/',userControllers.createUser);
