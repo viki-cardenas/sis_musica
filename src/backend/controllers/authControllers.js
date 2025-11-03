@@ -1,7 +1,8 @@
 import { authServices } from "../services/authServices.js";
+import { generateToken } from "../utils/auth.js";
 
 export const authControllers = {
-    //Registro tradicional 
+    //Registro tradicional
     async register(req, res){
         try{
             const { email, name, password } = req.body;
@@ -9,10 +10,9 @@ export const authControllers = {
 
             res.status(201).json({
                 succes: true,
-                message: "Usuario registrado exitosamente.",
+                message: "Usuario registrado exitosamente",
                 data: result
             });
-
         }catch(error){
             res.status(500).json({
                 succes: false,
@@ -26,10 +26,9 @@ export const authControllers = {
         try{
             const user = req.user;
             const token = generateToken (user.id, user.email);
-            res.redirect(`http://localhost:5173/`) //Vista de frontend exitosa
+            res.redirect(`http://localhost:5173/login-success?token=${token}`); //Vista de frontend exitoso      
         }catch(error){
-            res.redirect(`http://localhost:5173/`) //Vista de frontend si falla
+            res.redirect(`http://localhost:5173/login-error?message=${error.message}`);//Vista de frontend si falla
         }
-
     }
-    };
+};

@@ -45,8 +45,6 @@ const router = express.Router();
  */
 router.post("/register", authControllers.register);
 
-export default router;
-
 router.get(
   "/google/callback",
   passport.authenticate("google", {
@@ -55,3 +53,4 @@ router.get(
   authControllers.googleCallBack
 );
 
+export default router;

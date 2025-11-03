@@ -30,9 +30,10 @@ passport.use(
                     if(user){
                         user = await prisma.user.update({
                         where: { email },
-                        data: { googleId: googleId, 
-                            avatar: profile.photos[0].value,
-                        }
+                        data: { 
+                            googleId: googleId, 
+                            avatar: profile.photos[0].value
+                        },
                     });
                     //Si no existe de ninguna forma
                 }} else {
@@ -47,31 +48,22 @@ passport.use(
                 }
                 return done(null, user);
             }catch(error){
-                return done(error,null);
-
+                return done(error, null);
             }
         }
     )
 );
 
-passport.serializeUser((user, done) => {
-    try{
-
-    }catch(error){
-
-    }
-})
-
-//Funciones para que passport maneje lal sesión
-passport.serializeUser((user, done) => {
+//Funciones para que passport maneje la sesion
+passport.serializeUser((user, done) =>{
     done(null, user.id);
-})
+});
 
-passport.deserializeUser(async (id, done) => {
+passport.deserializeUser(async (id,done) =>{
     try{
-        const user = await prisma.user.findUnique({ where: id });
+        const user = await prisma.user.findUnique({where: id});
         done(null, user);
     }catch(error){
         done(error, null);
     }
-})
+});
