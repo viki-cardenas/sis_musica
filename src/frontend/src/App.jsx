@@ -9,10 +9,10 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/login-sucess" element={<LoginSuccess />} />
+        <Route path="/login-success" element={<LoginSuccess />} />
       </Routes>
     </BrowserRouter>
-  );
+  ); 
 }
 
 export default App;
