@@ -18,7 +18,7 @@ function Home() {
 
   return (
     <div className="min-h-screen bg-gray-100 p-8">
-      <h1 className="text-2xl font-bold mb-4">Bienvenido a mi pagina 🏡</h1>
+      <h1 className="text-2xl font-bold mb-4">Bienvenido a mi pagina 🌻</h1>
       {token && (
         <button
           onClick={handleLogout}
