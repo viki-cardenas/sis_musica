@@ -45,6 +45,35 @@ const router = express.Router();
  */
 router.post("/register", authControllers.register);
 
+/**
+ * @swagger
+ * /api/auth/login:
+ *  post:
+ *    summary: Iniciar sesión del usuario
+ *    tags: [Auth]
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              email:
+ *                type: string
+ *                example: victoria@gmail.com
+ *              password:
+ *                type: string
+ *                example: 123
+ *    responses:
+ *      200:
+ *        description: Inicio de sesión exitoso
+ *      401:
+ *        description: Credenciales inválidas
+ *      500:
+ *        description: Error interno del servidor
+ */
+router.post("/login", authControllers.login);
+
 router.get(
   "/google",
   passport.authenticate("google", {
