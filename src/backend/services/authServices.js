@@ -28,29 +28,28 @@ export const authServices = {
   },
 
   async login(data){
-        try{
-            const { email, password } = data;
-            const user =  await prisma.user.findUnique({
-                where: { email }
-            });
-
-            if(!user){
-                throw new Error("Email no encontrado")
-            }
-
-            const isPasswordValid = await comparePassword(password, user.password);
-            if(!isPasswordValid){
-                throw new Error("Contraseña incorrecta")
-            }
-
-            const token = generateToken(user.id, user.email)
-            const {password: _, ...userWithoutPassword } = user;
-            return{
-                user: userWithoutPassword,
-                token,
-            }
-        }catch(error){
-            throw new Error(error.message || "Error al iniciar sesión");
-        }
+    try{
+      const { email, password } = data;
+      const user = await prisma.user.findUnique({
+        where: { email }
+      });
+      if (!user){
+        throw new Error("Email no encontrado");
       }
-  }; 
+
+      const isPasswordValid = await comparePassword(password, user.password);
+      if (!isPasswordValid){
+        throw new Error("Contraseña incorrecta");
+      }
+
+      const token = generateToken(user.id, user.email);
+      const {password: _, ...userWithoutPassword } = user;
+      return{
+        user: userWithoutPassword,
+        token,
+      };
+    }catch(error){
+      throw new Error(error.message || "Error al iniciar sesion");
+    }
+  }
+};
