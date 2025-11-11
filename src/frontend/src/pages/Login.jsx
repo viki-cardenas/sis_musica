@@ -1,12 +1,15 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { FaSpotify, FaGoogle, FaEnvelope, FaFacebookF, FaPhoneAlt } from 'react-icons/fa'; 
 
 function Login() {
-  const GOOGLE_AUTH_URL = import.meta.env.VITE_GOOGLE_AUTH_URL;
+  const GOOGLE_AUTH_URL = import.meta.env.VITE_GOOGLE_AUTH_URL; 
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState(""); 
   const [error, setError] = useState(null);
+  
+  const [showEmailForm, setShowEmailForm] = useState(false);
 
   const navigate = useNavigate();
 
@@ -23,90 +26,137 @@ function Login() {
 
       const data = await response.json();
       if(!response.ok){
-        throw new Error (data.message||"Error al iniciar sesion");
+        throw new Error (data.message || "Error al iniciar sesión");
     }
 
     localStorage.setItem("authToken", data.data.token);
-        navigate ("/login-success");
+      navigate ("/login-success");
 
     } catch (err) {
         setError(err.message);
     }
   };
-  
+
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-md p-8 space-x-6 bg-white rounded-xl shadow-md">
-        <h1 className="text-2xl font-bold text-center">Iniciar Sesion</h1>
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div>
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Correo Electronico
-            </label>
-            <input
-              id="email"
-              type="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-            />
-          </div>
-          <div>
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Contraseña
-            </label>
-            <input
-              id="password"
-              type="password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-            />
-          </div>
-          {error && <p className="text-sm text-center text-red-500"></p>}
-          <div>
-            <button
-              type="submit"
-              className="w-full px-4 py-2 text-white font-medium bg-blue-500 border border-transparent rounded-md shadow-md hover:bg-orange-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 "
-            >
-              Iniciar Sesion
-            </button>
-          </div>
-        </form>
-        <div className="flex items-center">
-          <div className="flex-grow border-t border-gray-300"></div>
-          <span className="mx-4 text-sm font-medium text-gray-500">O</span>
-          <div className="flex-grow border-t border-gray-300"></div>
-        </div>
-        <div className="text-center">
-          <a
-            className="inline-flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-orange-500"
-            href={GOOGLE_AUTH_URL}
-          >
-            Iniciar sesion con Google
-          </a>
+    // CONTENEDOR PRINCIPAL: Fondo negro total
+    <div className="flex flex-col items-center justify-start min-h-screen bg-black p-4 pt-16 sm:pt-20">
+      
+      {/* CONTENEDOR CENTRAL */}
+      <div className="w-full max-w-xs text-center">
+        
+        {/* LOGO DE SPOTIFY */}
+        <div className="flex justify-center mb-10">
+          <FaSpotify className="w-16 h-16 text-green-500" />
         </div>
 
-        <p className="text-sm text-center text-gray-600">
-          No tienes una cuenta?
-        </p>
-        <Link
-          to="/register"
-          className="font-medium text-blue-600 hover:text-orange-500"
-        >
-          Registrate aqui
-        </Link>
+        {/* TÍTULO DE INICIO DE SESIÓN */}
+        <h1 className="text-2xl font-bold text-white mb-10">
+          Inicia sesión para escuchar contenido
+        </h1>
+
+        {/* --- BOTONES DE LOGIN/PLATAFORMAS --- */}
+        <div className="space-y-4">
+            
+            {/* 1. BOTÓN PRINCIPAL - CONTINUAR CON EMAIL (VERDE) */}
+            <button
+                // Al hacer click, muestra u oculta el formulario de email/pass
+                onClick={() => setShowEmailForm(!showEmailForm)}
+                className="w-full px-4 py-3 flex items-center justify-center font-bold text-black 
+                           bg-green-500 border border-green-500 rounded-full transition duration-300 hover:bg-green-400 shadow-md"
+            >
+                <FaEnvelope className="mr-3 w-5 h-5" />
+                Continuar con tu email
+            </button>
+
+            {/* 2. BOTÓN - CONTINUAR CON TELÉFONO (Gris oscuro con borde) */}
+            <button
+                onClick={() => alert("Función no implementada: Continuar con Teléfono")}
+                className="w-full px-4 py-3 flex items-center justify-center font-medium text-white 
+                           bg-transparent border border-gray-600 rounded-full transition duration-300 hover:bg-gray-900"
+            >
+                <FaPhoneAlt className="mr-3 w-5 h-5" />
+                Continuar con teléfono
+            </button>
+
+            {/* 3. BOTÓN - CONTINUAR CON GOOGLE (Gris oscuro con borde) */}
+            <a
+                href={GOOGLE_AUTH_URL}
+                className="w-full px-4 py-3 flex items-center justify-center font-medium text-white 
+                           bg-transparent border border-gray-600 rounded-full transition duration-300 hover:bg-gray-900"
+            >
+                <FaGoogle className="mr-3 w-5 h-5 text-red-500" />
+                Continuar con Google
+            </a>
+            
+            {/* 4. BOTÓN - CONTINUAR CON FACEBOOK (Gris oscuro con borde) */}
+            <button
+                onClick={() => handleSocialLogin('Facebook')}
+                className="w-full px-4 py-3 flex items-center justify-center font-medium text-white 
+                           bg-transparent border border-gray-600 rounded-full transition duration-300 hover:bg-gray-900"
+            >
+                <FaFacebookF className="mr-3 w-5 h-5 text-blue-500" />
+                Continuar con Facebook
+            </button>
+        </div>
+
+        {/* --- FORMULARIO DE EMAIL/CONTRASEÑA (SE MUESTRA AL CLICKAR EL BOTÓN VERDE) --- */}
+        {showEmailForm && (
+            <div className="mt-8 p-6 bg-gray-900 rounded-lg">
+                <form onSubmit={handleSubmit} className="space-y-4">
+                    {error && <p className="text-sm text-center text-red-400 mb-4">{error}</p>}
+                    
+                    <div>
+                        <input
+                            id="email"
+                            type="email"
+                            placeholder="Correo electrónico"
+                            required
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            className="w-full px-4 py-3 bg-gray-800 text-white border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                        />
+                    </div>
+                    
+                    <div>
+                        <input
+                            id="password"
+                            type="password"
+                            placeholder="Contraseña"
+                            required
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            className="w-full px-4 py-3 bg-gray-800 text-white border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                        />
+                    </div>
+
+                    <button
+                        type="submit"
+                        className="w-full px-4 py-3 text-black font-extrabold bg-green-500 rounded-full transition duration-300 hover:bg-green-400"
+                    >
+                        Iniciar Sesión
+                    </button>
+                </form>
+            </div>
+        )}
+
+        {/* --- ENLACES DE PIE DE PÁGINA --- */}
+        <div className="mt-16 sm:mt-24">
+            <p className="text-gray-400 text-sm">¿Ya tienes cuenta?</p>
+            <Link
+                to="/register"
+                className="text-white font-semibold hover:text-green-500 transition duration-300 text-sm"
+            >
+                Regístrate aquí
+            </Link>
+        </div>
       </div>
     </div>
   );
 }
+
+// Función auxiliar para botones sociales
+const handleSocialLogin = (platform) => {
+    alert(`Redirigiendo a ${platform} para iniciar sesión...`);
+};
 
 export default Login;

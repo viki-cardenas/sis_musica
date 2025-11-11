@@ -95,7 +95,11 @@ function Register() {
           <div>
             <button
               type="submit"
-              className="w-full px-4 py-2 font-medium text-white bg-primary border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                            // Color de fondo morado (bg-purple-600)
+                            // Texto blanco (text-white) al pasar el mouse (hover:text-white)
+                            // Cambio de color al presionar/pasar el mouse (hover:bg-purple-700)
+                            className="w-full px-4 py-3 text-white font-extrabold bg-purple-600 rounded-full transition duration-300 hover:bg-purple-700 shadow-md transform hover:scale-[1.01] focus:ring-purple-500"
+
             >
               Registrarse
             </button>
