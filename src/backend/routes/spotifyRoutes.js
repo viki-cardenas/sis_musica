@@ -63,7 +63,7 @@ router.get('/callback', spotifyController.handleCallback);
  * @swagger
  * /api/profile/login:
  *  get:
- *    summary: Busqueda de canciones
+ *    summary: Busqueda de perfil
  *    tags: [Email]
  *    requestBody:
  *      required: true
@@ -91,7 +91,7 @@ router.get('/callback', spotifyController.handleCallback);
  * @swagger
  * /api/top-artists/login:
  *  get:
- *    summary: Busqueda de canciones
+ *    summary: Busqueda artistas
  *    tags: [Email]
  *    requestBody:
  *      required: true
