@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
+
 function Home() {
   const [token, setToken] = useState(null);
   useEffect(() => {
@@ -73,7 +74,7 @@ function Home() {
           </div>
         )}
         
-      </div>
+      </div> 
     </div>
   );
 }
