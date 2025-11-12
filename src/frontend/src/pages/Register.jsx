@@ -38,14 +38,23 @@ function Register() {
     }
   };
 
-  return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-xl shadow-md">
-        <h1 className="text-2xl font-bold text-center">Crear una cuenta</h1>
+   return (
+    // CONTENEDOR PRINCIPAL: Fondo negro profundo, centrado
+    <div className="flex items-center justify-center min-h-screen bg-gray-900">
+      
+      {/* TARJETA DE CONTENIDO: Fondo gris oscuro, con borde y sombra verde */}
+      <div className="w-full max-w-md p-8 space-y-6 bg-gray-800 rounded-xl shadow-2xl 
+                      border border-green-700/50">
+        
+        {/* TÍTULO: Texto verde neón */}
+        <h1 className="text-3xl font-extrabold text-green-400 text-center">
+          Crear una Cuenta 🎶
+        </h1>
         
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+            {/* Etiquetas de campo: Texto gris claro */}
+            <label htmlFor="name" className="block text-sm font-medium text-gray-300">
               Nombre
             </label>
             <input
@@ -55,12 +64,15 @@ function Register() {
               required
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              // Campos de entrada: Fondo negro, texto blanco, foco verde neón
+              className="w-full px-3 py-2 mt-1 border border-gray-700 rounded-md shadow-sm 
+                         bg-gray-900 text-white placeholder-gray-500 
+                         focus:outline-none focus:ring-green-500 focus:border-green-500"
             />
           </div>
           
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="email" className="block text-sm font-medium text-gray-300">
               Correo Electrónico
             </label>
             <input
@@ -70,12 +82,15 @@ function Register() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              // Campos de entrada: Fondo negro, texto blanco, foco verde neón
+              className="w-full px-3 py-2 mt-1 border border-gray-700 rounded-md shadow-sm 
+                         bg-gray-900 text-white placeholder-gray-500 
+                         focus:outline-none focus:ring-green-500 focus:border-green-500"
             />
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="password" className="block text-sm font-medium text-gray-300">
               Contraseña
             </label>
             <input
@@ -85,30 +100,37 @@ function Register() {
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              // Campos de entrada: Fondo negro, texto blanco, foco verde neón
+              className="w-full px-3 py-2 mt-1 border border-gray-700 rounded-md shadow-sm 
+                         bg-gray-900 text-white placeholder-gray-500 
+                         focus:outline-none focus:ring-green-500 focus:border-green-500"
             />
           </div>
 
-          {/* Mensaje de error*/}
-          {error && <p className="text-sm text-center text-red-600">{error}</p>}
+          {/* Mensaje de error: Texto rojo */}
+          {error && <p className="text-sm text-center text-red-500">{error}</p>}
 
           <div>
             <button
               type="submit"
-                            // Color de fondo morado (bg-purple-600)
-                            // Texto blanco (text-white) al pasar el mouse (hover:text-white)
-                            // Cambio de color al presionar/pasar el mouse (hover:bg-purple-700)
-                            className="w-full px-4 py-3 text-white font-extrabold bg-purple-600 rounded-full transition duration-300 hover:bg-purple-700 shadow-md transform hover:scale-[1.01] focus:ring-purple-500"
-
+              // Botón principal: Verde neón, texto negro/oscuro, hover más oscuro
+              className="w-full px-4 py-3 font-extrabold text-gray-900 
+                         bg-green-400 rounded-full transition duration-300 
+                         hover:bg-green-500 shadow-md shadow-green-500/50
+                         transform hover:scale-[1.01] focus:ring-green-500"
             >
               Registrarse
             </button>
           </div>
         </form>
 
-        <p className="text-sm text-center text-gray-600">
+        {/* Link de Iniciar Sesión */}
+        <p className="text-sm text-center text-gray-400">
           ¿Ya tienes una cuenta?{' '}
-          <Link to="/login" className="font-medium text-indigo-600 hover:text-indigo-500">
+          <Link 
+            to="/login" 
+            className="font-extrabold text-green-400 hover:text-green-500"
+          >
             Inicia sesión
           </Link>
         </p>

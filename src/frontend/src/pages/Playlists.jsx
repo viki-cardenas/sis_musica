@@ -2,8 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-// Puedes crear un componente pequeño para cada tarjeta de playlist, aquí lo haremos simple.
-// import PlaylistItem from '../components/PlaylistItem'; 
+//import PlaylistItem from '../components/PlaylistItem'; 
 
 const Playlists = () => {
     const [playlists, setPlaylists] = useState([]);
