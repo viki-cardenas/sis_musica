@@ -17,11 +17,3 @@ model User {
   googleId String? @unique //Metodo login con Google
   avatar String? //Obtener la foto de perfil
 }
-
-model Musica {
-  nombre  Int  @id @default(autoincrement())
-  artista  String
-  imagen      String?
-  descripcion String?
-  createdAt   DateTime @default(now())
-}
