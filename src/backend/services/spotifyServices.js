@@ -1,70 +1,94 @@
-// spotifyService.js
+// src/backend/services/JuegosServices.js
+import axios from "axios";
+import { PrismaClient } from "@prisma/client";
 
-const fetch = require('node-fetch');
+const prisma = new PrismaClient();
+const API_URL = process.env.API_URL;
+const API_KEY = process.env.API_KEY || "";
 
-// --- Carga de Variables de Entorno ---
-const CLIENT_ID = process.env.CLIENT_ID;
-const CLIENT_SECRET = process.env.CLIENT_SECRET;
-const BACKEND_PORT = process.env.PORT || 3000;
-const REDIRECT_URI = `http://localhost:${BACKEND_PORT}/callback`;
+// Extrae array de juegos desde varias formas de respuesta comunes
+function extractGameArray(res) {
+  if (!res) return [];
+  // si pasas la respuesta completa (axios), mira res.data
+  const body = res.data ?? res;
+  if (Array.isArray(body)) return body;
+  if (body && Array.isArray(body.data)) return body.data;
+  if (body && Array.isArray(body.results)) return body.results;
+  if (body && Array.isArray(body.games)) return body.games;
+  return [];
+}
 
+// Ajusta el mapeo aquí según lo que tu API devuelva
+function mapExternalToJuego(external) {
+  return {
+    externalId: external.id ?? external.gameId ?? null,
+    nombre: external.nombre ?? external.name ?? external.title ?? "Sin nombre",
+    imagen: external.imagen ?? external.image ?? external.thumbnail ?? null,
+    descripcion: external.descripcion ?? external.description ?? external.summary ?? null,
+  };
+}
 
-/**
- * 1. Servicio para obtener el Access Token (Usado por handleCallback)
- * @param {string} code - Código de autorización recibido de Spotify.
- * @returns {object} Los datos de token de Spotify (access_token, refresh_token, expires_in).
- */
-const getAccessToken = async (code) => {
-    try {
-        const response = await fetch('https://accounts.spotify.com/api/token', {
-            method: 'POST',
-            headers: {
-                'Authorization': 'Basic ' + Buffer.from(`${CLIENT_ID}:${CLIENT_SECRET}`).toString('base64'),
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: new URLSearchParams({
-                grant_type: 'authorization_code',
-                code: code,
-                redirect_uri: REDIRECT_URI
-            })
-        });
+// Trae una sola página (útil para debug)
+export async function traerspotifyExternos() {
+  console.log("Llamando a API externa:", `${API_URL}/spotify`);
+  const res = await axios.get(`${API_URL}/spotify`, {
+    headers: API_KEY ? { Authorization: `Bearer ${API_KEY}` } : undefined,
+    timeout: 15000,
+  });
+  console.log("Respuesta externa (preview):", JSON.stringify(res.data).slice(0, 500));
+  return extractSpotifyArray(res);
+}
 
-        const data = await response.json();
-        return data; // Contiene access_token o un error
-    } catch (error) {
-        console.error('Error en el servicio de obtener token:', error);
-        throw new Error('Fallo en la comunicación con el servidor de tokens de Spotify.');
-    }
-};
+// Si tu API tiene paginación page/limit — opción segura
+export async function traerSpotifyPaginados(limit = 100) {
+  let page = 1;
+  const all = [];
+  while (true) {
+    const res = await axios.get(`${API_URL}/spotify`, {
+      headers: API_KEY ? { Authorization: `Bearer ${API_KEY}` } : undefined,
+      params: { page, limit },
+      timeout: 20000,
+    });
+    const items = extractSpotifyArray(res);
+    all.push(...items);
+    if (items.length < limit) break;
+    page++;
+  }
+  return all;
+}
 
+// Guarda/actualiza en la DB
+export async function guardarSpotifyEnDB({ usePaginated = false } = {}) {
+  const externos = usePaginated ? await traerSpotifyPaginados() : await traerSpotifysExternos();
+  let created = 0;
+  let updated = 0;
 
-/**
- * 2. Servicio para hacer peticiones GET a la API de Spotify (Usado por getProfile, getTopArtists, etc.)
- * @param {string} endpoint - El path de la API de Spotify (e.g., '/v1/me', '/v1/me/top/artists').
- * @param {string} accessToken - El Access Token del usuario.
- * @returns {object} Los datos JSON de la API.
- */
-const fetchSpotifyData = async (endpoint, accessToken) => {
-    try {
-        const response = await fetch(`https://api.spotify.com/v1/artists/4Z8W4fKeB5YxbusRsdQVPb${endpoint}`, {
-            headers: { 'Authorization': `Bearer ${accessToken}` }
-        });
+  for (const ext of externos) {
+    const j = mapExternalToSpotify(ext);
 
-        if (!response.ok) {
-            // Manejar errores de API de Spotify (401, 403, 404, etc.)
-            const errorData = await response.json();
-            throw new Error(`Spotify API Error: ${response.status} - ${errorData.error.message || response.statusText}`);
-        }
+    // Si tienes externalId, usa upsert por externalId; si no, por nombre
+    const whereClause = j.externalId ? { externalId: j.externalId } : { nombre: j.nombre };
 
-        return response.json();
-    } catch (error) {
-        console.error(`Error al obtener datos de Spotify para ${endpoint}:`, error);
-        throw error;
-    }
-};
+    const upsert = await prisma.spotify.upsert({
+      where: whereClause,
+      update: {
+        nombre: j.nombre,
+        imagen: j.imagen,
+        descripcion: j.descripcion,
+      },
+      create: {
+        externalId: j.externalId,
+        nombre: j.nombre,
+        imagen: j.imagen,
+        descripcion: j.descripcion,
+      },
+    });
 
-module.exports = {
-    getAccessToken,
-    fetchSpotifyData,
-    // Puedes añadir getRefreshedToken(refreshToken) aquí también
-};
+    // sencillo conteo: si createdAt === updatedAt asumimos creado (no perfecto)
+    if (upsert.createdAt.getTime && upsert.createdAt.getTime() === upsert.updatedAt.getTime()) created++;
+    else updated++;
+  }
+
+  console.log(`Sincronización completa. Created: ${created}, Updated: ${updated}`);
+  return { created, updated, total: externos.length };
+}

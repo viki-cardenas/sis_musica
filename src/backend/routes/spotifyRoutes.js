@@ -1,145 +1,105 @@
-// spotifyRoutes.js
+import express from "express";
+import { PrismaClient } from "@prisma/client";
+import { guardarspotifyEnDB } from "../services/spotifyServices.js"; // 👈 Importamos el servicio
 
-const express = require('express');
+
 const router = express.Router();
-const spotifyController = require('./spotifyControllers'); 
+const prisma = new PrismaClient();
 
 /**
  * @swagger
- * /api/music/login:
- *  post:
- *    summary: Register cancion y enviar
- *    tags: [Email]
- *    requestBody:
- *      required: true
- *      content:
- *        application/json:
- *          schema:
- *            type: object
- *            properties:
- *              email:
- *                type: object
- *                example: victoria@gmail.com
- *              name:
- *                type: string
- *                example: Victoria Cardenas
- *    responses:
- *      200:
- *        description: music enviado correctamente
- *      500:
- *        description: Error del servidor
+ * tags:
+ *   name: Music
+ *   description: Endpoints para gestión de spotify
  */
-router.get('/login', spotifyController.handleLogin); 
 
 /**
  * @swagger
- * /api/callback/login:
- *  post:
- *    summary: Register cancion y enviar
- *    tags: [Email]
- *    requestBody:
- *      required: true
- *      content:
- *        application/json:
- *          schema:
- *            type: object
- *            properties:
- *              email:
- *                type: object
- *                example: victoria@gmail.com
- *              name:
- *                type: string
- *                example: Victoria Cardenas
- *    responses:
- *      200:
- *        description: music enviado correctamente
- *      500:
- *        description: Error del servidor
+ * /api/music:
+ *   get:
+ *     summary: Obtener todas las musicas
+ *     tags: [music]
+ *     responses:
+ *       200:
+ *         description: Lista de musicas obtenida exitosamente
+ *       500:
+ *         description: Error del servidor
  */
-router.get('/callback', spotifyController.handleCallback);
-
+router.get("/", async (req, res) => {
+  try {
+    const spotify = await prisma.spotify.findMany({
+      orderBy: { createdAt: "desc" },
+    });
+    res.json(spotify);
+  } catch (error) {
+    console.error("Error al obtener la musica:", error);
+    res.status(500).json({ error: "Error al obtener la musica" });
+  }
+});
 
 /**
  * @swagger
- * /api/profile/login:
- *  get:
- *    summary: Busqueda de perfil
- *    tags: [Email]
- *    requestBody:
- *      required: true
- *      content:
- *        application/json:
- *          schema:
- *            type: object
- *            properties:
- *              email:
- *                type: object
- *                example: victoria@gmail.com
- *              name:
- *                type: string
- *                example: Victoria Cardenas
- *    responses:
- *      200:
- *        description: music enviado correctamente
- *      500:
- *        description: Error del servidor
+ * /api/music:
+ *   post:
+ *     summary: Agregar nueva musica
+ *     tags: [music]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               nombre:
+ *                 type: string
+ *                 example: spotify
+ *               descripcion:
+ *                 type: string
+ *                 example: Escuchar tipos de musica.
+ *               imagen:
+ *                 type: string
+ *                 example: https://example.com/musicspotify.jpg
+ *     responses:
+ *       201:
+ *         description: Agregado exitosamente
+ *       500:
+ *         description: Error al agregar la musica
  */
- router.get('/profile', spotifyController.getProfile);
-
+router.post("/", async (req, res) => {
+  try {
+    const { nombre, imagen, descripcion } = req.body;
+    const agregado = await prisma.agregado.create({
+      data: { nombre, imagen, descripcion },
+    });
+    res.status(201).json(agregado);
+  } catch (error) {
+    console.error("Error al agregar la musica:", error);
+    res.status(500).json({ error: "Error al agregar la musica" });
+  }
+});
 
 /**
  * @swagger
- * /api/top-artists/login:
- *  get:
- *    summary: Busqueda artistas
- *    tags: [Email]
- *    requestBody:
- *      required: true
- *      content:
- *        application/json:
- *          schema:
- *            type: object
- *            properties:
- *              email:
- *                type: object
- *                example: victoria@gmail.com
- *              name:
- *                type: string
- *                example: Victoria Cardenas
- *    responses:
- *      200:
- *        description: music enviado correctamente
- *      500:
- *        description: Error del servidor
+ * /api/music/eliminar:
+ *   post:
+ *     summary: eliminar musicas desde una API externa
+ *     tags: [music]
+ *     responses:
+ *       200:
+ *         description: eliminando musica exitosamente
+ *       500:
+ *         description: Error al eliminar musica
  */
-router.get('/top-artists', spotifyController.getTopArtists);
+// dentro de /eliminar route
+router.post("/eliminar", async (req, res) => {
+  try {
+    const usePaginated = req.query.paged === "true";
+    const resultado = await guardarJuegosEnDB({ usePaginated });
+    res.json({ ok: true, ...resultado });
+  } catch (error) {
+    console.error("Error al eliminar la musica:", error);
+    res.status(500).json({ error: "Error al eliminar la musica" });
+  }
+});
 
-/**
- * @swagger
- * /api/playlist/login:
- *  get:
- *    summary: Busqueda de canciones
- *    tags: [Email]
- *    requestBody:
- *      required: true
- *      content:
- *        application/json:
- *          schema:
- *            type: object
- *            properties:
- *              email:
- *                type: object
- *                example: victoria@gmail.com
- *              name:
- *                type: string
- *                example: Victoria Cardenas
- *    responses:
- *      200:
- *        description: music enviado correctamente
- *      500:
- *        description: Error del servidor
- */
-router.get('/playlists', spotifyControllers.getPlaylists);
-
-
-module.exports = router;
+export default router;
