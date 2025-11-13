@@ -1,7 +1,6 @@
 // Archivo: pages/Dashboard.jsx
 
-import React from 'react';
-import Navbar from '../components/Navbar'; 
+import Navbar from './Navbar'; 
 
 const Dashboard = () => {
     
